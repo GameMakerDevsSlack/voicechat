@@ -12,6 +12,11 @@
     <script>scripts\scr_audio_start_recording.gml</script>
     <script>scripts\scr_audio_draw_debug.gml</script>
     <script>scripts\scr_audio_handle_async.gml</script>
+    <script>scripts\show.gml</script>
+    <scripts name="Networking">
+      <script>scripts\Client_Network_Event.gml</script>
+      <script>scripts\Server_Network_Event.gml</script>
+    </scripts>
   </scripts>
   <objects name="objects">
     <object>objects\obj_test</object>

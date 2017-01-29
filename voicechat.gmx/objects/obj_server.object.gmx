@@ -27,8 +27,8 @@
             <kind>1</kind>
             <string>///Create
 
-socket = network_create_server( network_socket_tcp, PORT, 1 );
-client_socket = noone;
+socket = network_create_server( network_socket_tcp, PORT, 10 );
+socket_list = ds_list_create()
 
 sent_packets = 0;
 rec_packets = 0;
@@ -57,12 +57,23 @@ scr_audio_start_recording();
             <kind>1</kind>
             <string>///Step
 
-if ( keyboard_check_pressed( vk_f3 ) ) {
-    sent_packets++;
+if ( keyboard_check( vk_f3 ) )
+    {
     var _buffer = buffer_create( 20, buffer_fixed, 1 );
-    network_send_packet( client_socket, _buffer, 20 );
+    
+    //send to all sockets
+    var socket_list_size = ds_list_size(socket_list)
+    for (var i = 0;i &lt; socket_list_size;i += 1)
+        {
+        var get_socket = ds_list_find_value(socket_list,i)
+        network_send_packet(get_socket, _buffer, 20 );
+        sent_packets++;
+        }
+    //end send to all sockets
+    
+    //delete buffer when done
     buffer_delete( _buffer );
-}
+    }
 </string>
           </argument>
         </arguments>
@@ -89,17 +100,22 @@ if ( keyboard_check_pressed( vk_f3 ) ) {
 
 scr_audio_handle_async();
 
-if ( audio_offset &gt;= audio_buffer_size ) {
-    
-    if ( client_socket != noone ) {
+if ( audio_offset &gt;= audio_buffer_size )
+    {    
+    //send to all sockets
+    var socket_list_size = ds_list_size(socket_list)
+    for (var i = 0;i &lt; socket_list_size;i += 1)
+        {
+        var get_socket = ds_list_find_value(socket_list,i)
+        network_send_packet(get_socket, buf_audio_snapshot , 20 );
         sent_packets++;
-        network_send_packet( socket, buf_audio, audio_buffer_size );
-    }
+        show("sent audio packet to socket[" + string(get_socket) + "]")
+        }
+    //end send to all sockets
     
     buffer_fill( buf_audio, 0, buffer_s16, 0, audio_buffer_size );
     audio_offset = 0;
-    
-}
+    }
 </string>
           </argument>
         </arguments>
@@ -122,21 +138,7 @@ if ( audio_offset &gt;= audio_buffer_size ) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///Network Async
-
-switch( async_load[? "type" ] ) {
-    
-    case network_type_connect:
-        client_socket = async_load[? "id" ];
-    break;
-    
-    case network_type_data:
-        
-        var _buffer = async_load[? "buffer" ];
-        
-    break;
-    
-}
+            <string>Server_Network_Event()
 </string>
           </argument>
         </arguments>
@@ -163,7 +165,12 @@ switch( async_load[? "type" ] ) {
 
 scr_audio_draw_debug();
 draw_text( 5, 65, "sent=" + string( sent_packets ) );
-draw_text( 5, 85, "client_socket=" + string( client_socket ) );
+var socket_list_size = ds_list_size(socket_list)
+for (var i = 0;i &lt; socket_list_size;i += 1)
+    {
+    var get_socket = ds_list_find_value(socket_list,i)
+    draw_text( 5, 85 + 16*i , "client_socket=" + string( get_socket ) );
+    }
 </string>
           </argument>
         </arguments>
