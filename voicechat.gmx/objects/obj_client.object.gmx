@@ -27,13 +27,11 @@
             <kind>1</kind>
             <string>///Create
 
-scr_audio_start_recording();
-
 socket = network_create_socket( network_socket_tcp );
 network_connect( socket, get_string( "IP?", "127.0.0.1" ), PORT );
 
-sent_packets = 0;
-rec_packets = 0;
+scr_audio_start_recording();
+scr_playback_start();
 </string>
           </argument>
         </arguments>
@@ -58,7 +56,7 @@ rec_packets = 0;
             <kind>1</kind>
             <string>///Step
 
-scr_audio_handle_step();
+scr_playback_handle_step();
 </string>
           </argument>
         </arguments>
@@ -85,16 +83,10 @@ scr_audio_handle_step();
 
 scr_audio_handle_async();
 
-if ( audio_offset &gt;= audio_buffer_size ) {    
-    
-    if ( client_socket != noone ) {
-        network_send_packet( socket, buf_audio, audio_buffer_size );
-        sent_packets++;
-    }
-    
+if ( audio_offset &gt;= audio_buffer_size ) {
+    if ( client_socket != noone ) network_send_packet( socket, buf_audio, audio_buffer_size );
     buffer_fill( buf_audio, 0, buffer_s16, 0, audio_buffer_size );
     audio_offset = 0;
-    
 }
 </string>
           </argument>
@@ -123,7 +115,7 @@ if ( audio_offset &gt;= audio_buffer_size ) {
 switch( async_load[? "type" ] ) {
 
     case network_type_data:
-        rec_packets++;
+        scr_playback_add_buffer( async_load[? "buffer" ] );
     break;
     
 }
@@ -152,9 +144,7 @@ switch( async_load[? "type" ] ) {
             <string>///Draw
 
 scr_audio_draw_debug();
-
-draw_text( 5, 65, "sent=" + string( sent_packets ) );
-draw_text( 5, 85, "recieved=" + string( rec_packets ) );
+draw_text( 5, 65, "recieved=" + string( playback_index ) );
 </string>
           </argument>
         </arguments>

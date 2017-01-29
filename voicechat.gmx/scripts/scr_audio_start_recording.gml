@@ -10,4 +10,3 @@ buf_audio_snapshot = buffer_create( 4800, buffer_fixed, 1 );
 
 audio_length = 0;
 audio_offset = 0;
-audio_sound = noone;

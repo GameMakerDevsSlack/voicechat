@@ -11,8 +11,10 @@
   <scripts name="scripts">
     <script>scripts\scr_audio_start_recording.gml</script>
     <script>scripts\scr_audio_draw_debug.gml</script>
-    <script>scripts\scr_audio_handle_step.gml</script>
     <script>scripts\scr_audio_handle_async.gml</script>
+    <script>scripts\scr_playback_start.gml</script>
+    <script>scripts\scr_playback_handle_step.gml</script>
+    <script>scripts\scr_playback_add_buffer.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_test</object>
