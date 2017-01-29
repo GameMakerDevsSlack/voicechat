@@ -28,7 +28,11 @@
             <string>///Create
 
 socket = network_create_socket( network_socket_tcp );
-network_connect( socket, get_string( "IP?", "127.0.0.1" ), PORT );
+var get_input = get_string( "IP?", "127.0.0.1" )
+//game will crash if input box is exited
+//add failsafe to prevent that
+
+network_connect( socket, get_input, PORT );
 
 scr_audio_start_recording();
 
@@ -81,10 +85,7 @@ scr_audio_handle_async();
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///Network Async
-
-rec_packets++;
-show_message( "" );
+            <string>Client_Network_Event()
 </string>
           </argument>
         </arguments>

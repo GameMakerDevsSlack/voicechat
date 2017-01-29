@@ -88,6 +88,15 @@ if ( keyboard_check_pressed( vk_f2 ) ) {
 draw_text( 5,  5, date_time_string( GM_build_date ) );
 draw_text( 5, 25, "F1 - Create server" );
 draw_text( 5, 45, "F2 - Create client" );
+
+
+//little gift, just for you
+var custom_color = make_colour_hsv((current_time/9) mod 255,255,255)
+draw_set_color(custom_color)
+var text = "Natesky9 was here"
+draw_text(room_width-200,room_height-32,text)
+draw_set_color(c_black)
+//end little gift
 </string>
           </argument>
         </arguments>
